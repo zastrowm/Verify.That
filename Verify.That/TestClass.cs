@@ -9,7 +9,8 @@ namespace VerifiedAssertions
     public static void Main()
     {
       Verify.That("n")
-            .Is.GreaterThan("m", $"'n' <= 'm' somehow!");
+            .Is.GreaterThan("m", $"'n' <= 'm' somehow!")
+            .Is.LessThan("m");
       
       Verify.That("5")
             .Is.GreaterThan("6", $"Expected Failure");

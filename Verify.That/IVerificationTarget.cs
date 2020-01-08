@@ -14,6 +14,9 @@ namespace VerifiedAssertions
     ///   The value to validate.
     /// </summary>
     T Value { get; }
+    
+    public IVerificationTarget<T> Is
+      => this;
 
     /// <summary>
     ///   Adds an assertion that should be used to verify that the value meets expectations.
