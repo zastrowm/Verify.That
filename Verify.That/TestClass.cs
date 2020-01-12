@@ -35,7 +35,6 @@ namespace VerifiedAssertions
                                   Comparer<It>.Create((l, r) => l.Property.CompareTo(r.Property)),
                                   $"Expected Failure");
           });
-      
     }
 
     public struct It
