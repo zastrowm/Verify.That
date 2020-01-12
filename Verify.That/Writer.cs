@@ -15,5 +15,10 @@ namespace VerifiedAssertions
 
     public void WriteLine()
       => Console.WriteLine();
+
+    public IDisposable Indent()
+    {
+      return null;
+    }
   }
 }
