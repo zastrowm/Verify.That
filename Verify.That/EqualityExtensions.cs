@@ -13,7 +13,7 @@ namespace VerifiedAssertions
       this IVerificationTarget<T> value,
       T comparisonValue,
       FormattableString? message = null)
-      => EqualTo(value, comparisonValue, null, message);
+      => EqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.

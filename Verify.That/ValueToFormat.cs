@@ -21,6 +21,6 @@ namespace VerifiedAssertions
     public T Value { get; }
 
     public override string ToString()
-      => Value?.ToString();
+      => Value?.ToString() ?? "<null>";
   }
 }

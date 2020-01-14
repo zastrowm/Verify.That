@@ -30,6 +30,6 @@ namespace VerifiedAssertions
 
     /// <inheritdoc />
     public override string ToString()
-      => Value?.ToString();
+      => Value?.ToString() ?? "<null>";
   }
 }

@@ -15,9 +15,9 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> GreaterThan<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
-      FormattableString message = null)
+      FormattableString? message = null)
       where T : IComparable<T>
-      => GreaterThan(value, comparisonValue, null, message);
+      => GreaterThan(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
@@ -26,7 +26,7 @@ namespace VerifiedAssertions
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
-      FormattableString message = null)
+      FormattableString? message = null)
     {
       return CallbackAssertion.Create(
         target,
@@ -74,9 +74,9 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> GreaterThanOrEqualTo<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
-      FormattableString message = null)
+      FormattableString? message = null)
       where T : IComparable<T>
-      => GreaterThanOrEqualTo(value, comparisonValue, null, message);
+      => GreaterThanOrEqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than or equal to the comparison value.
@@ -85,7 +85,7 @@ namespace VerifiedAssertions
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
-      FormattableString message = null)
+      FormattableString? message = null)
     {
       return CallbackAssertion.Create(
         target,
@@ -133,11 +133,11 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> LessThan<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
-      FormattableString message = null
+      FormattableString? message = null
     )
       where T : IComparable<T>
     {
-      return LessThan(value, comparisonValue, null, message);
+      return LessThan(value, comparisonValue, null!, message);
     }
 
     /// <summary>
@@ -147,7 +147,7 @@ namespace VerifiedAssertions
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
-      FormattableString message = null
+      FormattableString? message = null
     )
     {
       return CallbackAssertion.Create(
@@ -196,9 +196,9 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> LessThanOrEqualTo<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
-      FormattableString message = null
+      FormattableString? message = null
     )
-      => LessThanOrEqualTo(value, comparisonValue, null, message);
+      => LessThanOrEqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is less or equal to than the comparison value.
@@ -207,7 +207,7 @@ namespace VerifiedAssertions
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
-      FormattableString message = null
+      FormattableString? message = null
     )
     {
       return CallbackAssertion.Create(
