@@ -12,49 +12,84 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> EqualTo<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
-      FormattableString message = null)
+      FormattableString? message = null)
       => EqualTo(value, comparisonValue, null, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
     /// </summary>
     public static IVerificationTarget<T> EqualTo<T>(
-      this IVerificationTarget<T> value,
+      this IVerificationTarget<T> target,
       T comparisonValue,
       IEqualityComparer<T> comparer,
-      FormattableString message = null)
+      FormattableString? message = null)
     {
-      return value.AddAssertion(new EqualityAssertion<T>(comparisonValue,
-                                                         comparer,
-                                                         message,
-                                                         "=="));
+      return CallbackAssertion.Create(
+        target,
+        context =>
+        {
+          bool isUsingDefaultComparer = false;
+          if (comparer == null)
+          {
+            isUsingDefaultComparer = true;
+            comparer = EqualityComparer<T>.Default;;
+          }
+
+          bool didPass = comparer.Equals(target.Value, comparisonValue);
+          if (didPass)
+          {
+            return true;
+          }
+
+          var writer = context.Writer;
+
+          context.WriteMessage(message);
+
+          using (writer.Indent())
+          {
+            writer.WriteLine($"Expected: == {context.Wrap(comparisonValue)}");
+            writer.WriteLine($"But was:     {target}");
+          }
+
+          if (!isUsingDefaultComparer)
+          {
+            writer.WriteLine($"(using custom comparer)");
+          }
+
+          return false;
+        });
     }
     
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
     /// </summary>
     public static IVerificationTarget<T> ReferenceEquals<T>(
-      this IVerificationTarget<T> value,
+      this IVerificationTarget<T> target,
       T comparisonValue,
-      FormattableString message = null)
+      FormattableString? message = null)
     where T : class
     {
-      return value.AddAssertion(new EqualityAssertion<T>(comparisonValue,
-                                                         ReferenceEqualityComparer<T>.Instance,
-                                                         message,
-                                                         "=="));
-    }
-    
-    private class ReferenceEqualityComparer<T> : IEqualityComparer<T>
-    {
-      public static readonly ReferenceEqualityComparer<T> Instance
-        = new ReferenceEqualityComparer<T>();
-      
-      public bool Equals(T x, T y)
-        => Object.ReferenceEquals(x, y);
+      return CallbackAssertion.Create(
+        target,
+        context =>
+        {
+          if (ReferenceEquals(target.Value, comparisonValue))
+          {
+            return true;
+          }
 
-      public int GetHashCode(T obj)
-        => obj?.GetHashCode() ?? -1;
+          context.WriteMessage(message);
+
+          using (context.Writer.Indent())
+          {
+            context.Writer.WriteLine($"Expected: === {context.Wrap(comparisonValue)}");
+            context.Writer.WriteLine($"But was:      {target}");
+          }
+
+          context.Writer.WriteLine($"(using reference comparer)");
+
+          return false;
+        });
     }
   }
 }

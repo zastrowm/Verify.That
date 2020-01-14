@@ -10,24 +10,6 @@ namespace VerifiedAssertions
   /// </summary>
   public abstract class VerificationAssertion<T>
   {
-    protected VerificationAssertion(FormattableString message)
-    {
-      Message = message;
-    }
-
-    protected FormattableString Message { get; }
-
-    protected ValueToFormat<T> Wrap(T value)
-      => new ValueToFormat<T>(value);
-
     public abstract bool Apply(IVerificationTarget<T> value, Context context);
-
-    protected void WriteMessage(Context context)
-    {
-      if (Message == null)
-        return;
-
-      context.Writer.WriteLine(Message);
-    }
   }
 }

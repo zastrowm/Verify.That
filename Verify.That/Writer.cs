@@ -20,10 +20,20 @@ namespace VerifiedAssertions
     }
 
     public void Write(FormattableString str)
-      => _writer.Write(str.ToString());
+    {
+      if (str == null)
+        throw new ArgumentNullException(nameof(str));
+
+      _writer.Write(str.ToString());
+    }
 
     public void WriteLine(FormattableString str)
-      => _writer.WriteLine(str.ToString());
+    {
+      if (str == null)
+        throw new ArgumentNullException(nameof(str));
+
+      _writer.WriteLine(str.ToString());
+    }
 
     public void WriteLine()
       => _writer.WriteLine();

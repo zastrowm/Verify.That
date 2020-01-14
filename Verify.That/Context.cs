@@ -11,5 +11,19 @@ namespace VerifiedAssertions
   {
     public Writer Writer { get; }
       = new Writer();
+
+    public T Wrap<T>(T value)
+    {
+      // TODO
+      return value;
+    }
+
+    public void WriteMessage(FormattableString? message)
+    {
+      if (message != null)
+      {
+        Writer.WriteLine(message);
+      }
+    }
   }
 }
