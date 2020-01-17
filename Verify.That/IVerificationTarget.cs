@@ -15,8 +15,7 @@ namespace VerifiedAssertions
     /// </summary>
     T Value { get; }
     
-    public IVerificationTarget<T> Is
-      => this;
+    IVerificationTarget<T> Is { get; }
 
     /// <summary>
     ///   Adds an assertion that should be used to verify that the value meets expectations.
