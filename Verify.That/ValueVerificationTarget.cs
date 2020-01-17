@@ -18,9 +18,10 @@ namespace VerifiedAssertions
     
     public IVerificationTarget<T> AddAssertion(VerificationAssertion<T> assertion)
     {
-      bool didFail = assertion.Apply(this, new Context());
-      if (didFail)
-        throw new InvalidOperationException("Assertion failure, see output");
+      var context = new Context();
+      bool didPass = assertion.Apply(this, context);
+      if (!didPass)
+        throw new InvalidOperationException($"Assertion failure: {Environment.NewLine}{context.GetOutput()}");
       
       return this;
     }

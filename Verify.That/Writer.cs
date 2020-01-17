@@ -13,9 +13,9 @@ namespace VerifiedAssertions
     private readonly DedentOnDisposable _disposable;
     private readonly IndentedTextWriter _writer;
 
-    public Writer()
+    public Writer(TextWriter writer)
     {
-      _writer = new IndentedTextWriter(Console.Out);
+      _writer = new IndentedTextWriter(writer);
       _disposable = new DedentOnDisposable(_writer);
     }
 
@@ -110,9 +110,11 @@ namespace VerifiedAssertions
       protected override void Dispose(bool disposing)
         => _wrapped.Dispose();
 
+#if NETCOREAPP
       /// <inheritdoc />
       public override ValueTask DisposeAsync()
         => _wrapped.DisposeAsync();
+#endif
 
       /// <inheritdoc />
       public override Encoding Encoding
