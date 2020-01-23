@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,10 +30,17 @@ namespace VerifiedAssertions
         context =>
         {
           bool isUsingDefaultComparer = false;
+
           if (comparer == null)
           {
+            var result = TryUseCollectionComparer(context, target.Value, comparisonValue);
+            if (result != null)
+            {
+              return result.Value;
+            }
+
             isUsingDefaultComparer = true;
-            comparer = EqualityComparer<T>.Default;;
+            comparer = EqualityComparer<T>.Default;
           }
 
           bool didPass = comparer.Equals(target.Value, comparisonValue);
@@ -58,6 +66,40 @@ namespace VerifiedAssertions
 
           return false;
         });
+    }
+
+    /// <summary>
+    ///   Check if the target value is a type of <see cref="IEnumerable"/> and if so, attempt to compare
+    ///   the elements instead of the using the default comparer, which would simply do a reference equal.
+    /// </summary>
+    private static bool? TryUseCollectionComparer(Context context, object? targetValue, object? comparisonValue)
+    {
+      // we let the rest of the system handle null
+      if (targetValue == null
+          || comparisonValue == null)
+        return null;
+
+
+      var typeInfo = new ReflectedTypeInfo(targetValue.GetType());
+
+      if (typeInfo.DoesOverridesEquals
+          || typeInfo.IEnumerableTypeImplemented == null)
+        return null;
+
+      Type elementType;
+
+      if (typeInfo.IEnumerableTypeImplemented == typeof(IEnumerable))
+      {
+        // we need an instance of IEnumerable<T>
+        targetValue = ((IEnumerable)targetValue).Cast<object>();
+        elementType = typeof(object);
+      }
+      else
+      {
+        elementType = typeInfo.IEnumerableTypeImplemented.GetGenericArguments().Single();
+      }
+
+      return ElementComparer.Compare(context, elementType, (IEnumerable)targetValue, (IEnumerable)comparisonValue);
     }
 
     /// <summary>

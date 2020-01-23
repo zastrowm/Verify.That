@@ -27,6 +27,15 @@ namespace VerifiedAssertions
       _writer.Write(str.ToString());
     }
 
+    public void WriteNoteLine(FormattableString str)
+    {
+      if (str == null)
+        throw new ArgumentNullException(nameof(str));
+
+      _writer.Write(" -note- ");
+      _writer.WriteLine(str.ToString());
+    }
+
     public void WriteLine(FormattableString str)
     {
       if (str == null)
