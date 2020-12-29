@@ -10,16 +10,16 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is equal to the given value.
     /// </summary>
-    public static IVerificationTarget<T> EqualTo<T>(
+    public static IVerificationTarget<T> ToEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       FormattableString? message = null)
-      => EqualTo(target, comparisonValue, null!, message);
+      => ToEqual(target, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is equal to the given value.
     /// </summary>
-    public static IVerificationTarget<T> EqualTo<T>(
+    public static IVerificationTarget<T> ToEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       IEqualityComparer<T> comparer,
@@ -79,7 +79,6 @@ namespace VerifiedAssertions
           || comparisonValue == null)
         return null;
 
-
       var typeInfo = new ReflectedTypeInfo(targetValue.GetType());
 
       if (typeInfo.DoesOverridesEquals
@@ -105,11 +104,11 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is equal to the given value.
     /// </summary>
-    public static IVerificationTarget<T> ReferenceEqualTo<T>(
+    public static IVerificationTarget<T> ToReferenceEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       FormattableString? message = null)
-    where T : class
+      where T : class
     {
       return CallbackAssertion.Create(
         target,
@@ -137,7 +136,7 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is equal to the given value.
     /// </summary>
-    public static IVerificationTarget<T> NotReferenceEqualTo<T>(
+    public static IVerificationTarget<T> ToNotReferenceEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       FormattableString? message = null)

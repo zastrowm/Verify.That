@@ -12,7 +12,7 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is equal to true.
     /// </summary>
-    public static IVerificationTarget<bool> True(
+    public static IVerificationTarget<bool> ToBeTrue(
       this IVerificationTarget<bool> target,
       FormattableString? message = null)
       => ExpectBooleanValue(target, true, message);
@@ -20,7 +20,7 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is equal to true.
     /// </summary>
-    public static IVerificationTarget<bool?> True(
+    public static IVerificationTarget<bool?> ToBeTrue(
       this IVerificationTarget<bool?> target,
       FormattableString? message = null)
       => ExpectBooleanValue(target, true, message);
@@ -28,16 +28,15 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is equal to false.
     /// </summary>
-    public static IVerificationTarget<bool> False(
+    public static IVerificationTarget<bool> ToBeFalse(
       this IVerificationTarget<bool> target,
       FormattableString? message = null)
       => ExpectBooleanValue(target, false, message);
 
-
     /// <summary>
     ///   Verifies that the given value is equal to false.
     /// </summary>
-    public static IVerificationTarget<bool?> False(
+    public static IVerificationTarget<bool?> ToBeFalse(
       this IVerificationTarget<bool?> target,
       FormattableString? message = null)
       => ExpectBooleanValue(target, false, message);

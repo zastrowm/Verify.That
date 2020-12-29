@@ -12,27 +12,27 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T?> GreaterThan<T>(
+    public static IVerificationTarget<T?> ToBeGreaterThan<T>(
       this IVerificationTarget<T?> value,
       T comparisonValue,
       FormattableString? message = null)
       where T : struct, IComparable<T>
-      => GreaterThan(value, comparisonValue, null!, message);
+      => ToBeGreaterThan(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> GreaterThan<T>(
+    public static IVerificationTarget<T> ToBeGreaterThan<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
       FormattableString? message = null)
       where T : IComparable<T>
-      => GreaterThan(value, comparisonValue, null!, message);
+      => ToBeGreaterThan(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> GreaterThan<T>(
+    public static IVerificationTarget<T> ToBeGreaterThan<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
@@ -81,27 +81,27 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is greater than or equal to the comparison value.
     /// </summary>
-    public static IVerificationTarget<T?> GreaterThanOrEqualTo<T>(
+    public static IVerificationTarget<T?> ToBeGreaterThanOrEqualTo<T>(
       this IVerificationTarget<T?> value,
       T comparisonValue,
       FormattableString? message = null)
       where T : struct, IComparable<T>
-      => GreaterThanOrEqualTo(value, comparisonValue, null!, message);
+      => ToBeGreaterThanOrEqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than or equal to the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> GreaterThanOrEqualTo<T>(
+    public static IVerificationTarget<T> ToBeGreaterThanOrEqualTo<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
       FormattableString? message = null)
       where T : IComparable<T>
-      => GreaterThanOrEqualTo(value, comparisonValue, null!, message);
+      => ToBeGreaterThanOrEqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is greater than or equal to the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> GreaterThanOrEqualTo<T>(
+    public static IVerificationTarget<T> ToBeGreaterThanOrEqualTo<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
@@ -150,33 +150,33 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is less than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T?> LessThan<T>(
+    public static IVerificationTarget<T?> ToBeLessThan<T>(
       this IVerificationTarget<T?> value,
       T comparisonValue,
       FormattableString? message = null
     )
       where T : struct, IComparable<T>
     {
-      return LessThan(value, comparisonValue, null!, message);
+      return ToBeLessThan(value, comparisonValue, null!, message);
     }
 
     /// <summary>
     ///   Verifies that the given value is less than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> LessThan<T>(
+    public static IVerificationTarget<T> ToBeLessThan<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
       FormattableString? message = null
     )
       where T : IComparable<T>
     {
-      return LessThan(value, comparisonValue, null!, message);
+      return ToBeLessThan(value, comparisonValue, null!, message);
     }
 
     /// <summary>
     ///   Verifies that the given value is less than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> LessThan<T>(
+    public static IVerificationTarget<T> ToBeLessThan<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,
@@ -226,29 +226,29 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is less or equal to than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T?> LessThanOrEqualTo<T>(
+    public static IVerificationTarget<T?> ToBeLessThanOrEqualTo<T>(
       this IVerificationTarget<T?> value,
       T comparisonValue,
       FormattableString? message = null
     )
       where T : struct, IComparable<T>
-      => LessThanOrEqualTo(value, comparisonValue, null!, message);
+      => ToBeLessThanOrEqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is less or equal to than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> LessThanOrEqualTo<T>(
+    public static IVerificationTarget<T> ToBeLessThanOrEqualTo<T>(
       this IVerificationTarget<T> value,
       T comparisonValue,
       FormattableString? message = null
     )
       where T : IComparable<T>
-      => LessThanOrEqualTo(value, comparisonValue, null!, message);
+      => ToBeLessThanOrEqualTo(value, comparisonValue, null!, message);
 
     /// <summary>
     ///   Verifies that the given value is less or equal to than the comparison value.
     /// </summary>
-    public static IVerificationTarget<T> LessThanOrEqualTo<T>(
+    public static IVerificationTarget<T> ToBeLessThanOrEqualTo<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
       IComparer<T> comparer,

@@ -9,10 +9,10 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is null.
     /// </summary>
-    public static IVerificationTarget<T> Null<T>(
+    public static IVerificationTarget<T> ToBeNull<T>(
       this IVerificationTarget<T> target,
       FormattableString? message = null)
-    where T : class
+      where T : class
     {
       return CallbackAssertion.Create(
         target,
@@ -36,7 +36,7 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is null.
     /// </summary>
-    public static IVerificationTarget<T?> Null<T>(
+    public static IVerificationTarget<T?> ToBeNull<T>(
       this IVerificationTarget<T?> target,
       FormattableString? message = null)
       where T : struct
@@ -63,7 +63,7 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is not null.
     /// </summary>
-    public static IVerificationTarget<T> NotNull<T>(
+    public static IVerificationTarget<T> ToBeNonNull<T>(
       this IVerificationTarget<T> target,
       FormattableString? message = null)
       where T : class
@@ -90,7 +90,7 @@ namespace VerifiedAssertions
     /// <summary>
     ///   Verifies that the given value is not null.
     /// </summary>
-    public static IVerificationTarget<T?> NotNull<T>(
+    public static IVerificationTarget<T?> ToBeNonNull<T>(
       this IVerificationTarget<T?> target,
       FormattableString? message = null)
       where T : struct

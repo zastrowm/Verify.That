@@ -12,26 +12,26 @@ namespace VerifiedAssertions
       Try(delegate
           {
             Verify.That("5")
-                  .Is.EqualTo("6");
+                  .Is.ToEqual("6");
           });
       
       Try(delegate
           {
             Verify.That("n")
-                  .Is.GreaterThan("m", $"'n' <= 'm' somehow!")
-                  .Is.LessThan("m");
+                  .Is.ToBeGreaterThan("m", $"'n' <= 'm' somehow!")
+                  .Is.ToBeLessThan("m");
           });
 
       Try(delegate
           {
             Verify.That("5")
-                  .Is.GreaterThan("6", $"Expected Failure");
+                  .Is.ToBeGreaterThan("6", $"Expected Failure");
           });
       
       Try(delegate
           {
             Verify.That(new It())
-                  .Is.GreaterThan(new It(),
+                  .Is.ToBeGreaterThan(new It(),
                                   Comparer<It>.Create((l, r) => l.Property.CompareTo(r.Property)),
                                   $"Expected Failure");
           });

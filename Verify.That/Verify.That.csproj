@@ -9,5 +9,6 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>../StrongNameKey.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>VerifiedAssertions</RootNamespace>
   </PropertyGroup>
 </Project>
