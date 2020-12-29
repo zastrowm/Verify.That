@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -17,20 +18,20 @@ namespace VerifiedAssertions
     private static MethodInfo GetNonGenericMethod()
     {
       return typeof(ElementComparer).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-                                              .Single(m => m.Name == nameof(CompareGeneric))!;
+                                    .Single(m => m.Name == nameof(CompareGeneric))!;
     }
 
-    public static bool Compare(Context context, Type elementType, IEnumerable left, IEnumerable right)
+    public static bool Compare(Context context, Type elementType, IEnumerable? left, IEnumerable? right)
     {
       var method = CompareGenericMethodInfo.MakeGenericMethod(elementType);
-      return (bool)method.Invoke(null, new object[] { context, left, right })!;
+      return (bool)method.Invoke(null, new object?[] { context, left, right })!;
     }
 
     [Description("Reflection")]
-    private static bool CompareGeneric<T>(Context context, IEnumerable left, IEnumerable right)
+    private static bool CompareGeneric<T>(Context context, IEnumerable? left, IEnumerable? right)
     {
       return new ElementComparer<T>(context, null)
-        .CompareEachElement((IEnumerable<T>)left, (IEnumerable<T>)right);
+        .CompareEachElement((IEnumerable<T>?)left, (IEnumerable<T>?)right);
     }
   }
 
@@ -54,9 +55,51 @@ namespace VerifiedAssertions
       }
     }
 
-    public bool CompareEachElement(IEnumerable<T> sequenceActual,
-                                   IEnumerable<T> sequenceExpected)
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+    public bool CompareEachElement(
+      IEnumerable<T>? sequenceActual,
+      IEnumerable<T>? sequenceExpected
+    )
     {
+      var writer = _context.Writer;
+
+      switch ((sequenceActual, sequenceExpected))
+      {
+        case (null, null):
+          return true;
+        case (null, _):
+        {
+          writer.WriteLine($"Expected non-null enumerable, but got null enumerable");
+          using (writer.Indent())
+          {
+            var textRepresentation = GetStringRepresentationOfBeginning(sequenceExpected!);
+            writer.WriteLine($"Expected: {textRepresentation}");
+            writer.WriteLine($"Actual:   {_context.Wrap<object?>(null)}");
+          }
+
+          return false;
+        }
+        case (_, null):
+        {
+          writer.WriteLine($"Expected null enumerable, but got non-null enumerable");
+          using (writer.Indent())
+          {
+            var textRepresentation = GetStringRepresentationOfBeginning(sequenceActual!);
+            writer.WriteLine($"Expected:   {_context.Wrap<object?>(null)}");
+            writer.WriteLine($"Actual:     {textRepresentation}");
+          }
+
+          return false;
+        }
+        case (_, _):
+          // handled below
+          break;
+      }
+
+      // make the compiler happy
+      if (sequenceActual == null || sequenceExpected == null)
+        return false;
+
       int index = 0;
 
       var collectionCountInfo = new CollectionCount(sequenceExpected, sequenceActual);
@@ -71,15 +114,15 @@ namespace VerifiedAssertions
 
           if (didActualMove != didRightMove)
           {
-            _context.Writer.WriteLine($"Sequence has different length than expected");
+            writer.WriteLine($"Sequence has different length than expected");
 
             if (collectionCountInfo.HasBothCounts)
             {
-              using (_context.Writer.Indent())
+              using (writer.Indent())
               {
-                _context.Writer.WriteLine($"Expected count = {collectionCountInfo.CountExpected}");
-                _context.Writer.WriteLine($"Actual count   = {collectionCountInfo.CountActual}");
-                _context.Writer.WriteLine();
+                writer.WriteLine($"Expected count = {collectionCountInfo.CountExpected}");
+                writer.WriteLine($"Actual count   = {collectionCountInfo.CountActual}");
+                writer.WriteLine();
 
                 WritePrecedingElementsWereEqual(index);
               }
@@ -88,22 +131,22 @@ namespace VerifiedAssertions
             {
               if (index == 0)
               {
-                _context.Writer.WriteLine($"Actual sequence was non-empty, expected sequence was empty.");
+                writer.WriteLine($"Actual sequence was non-empty, expected sequence was empty.");
               }
               else
               {
-                _context.Writer.WriteLine($"After {index} elements, expected sequence stopped");
+                writer.WriteLine($"After {index} elements, expected sequence stopped");
               }
             }
             else
             {
               if (index == 0)
               {
-                _context.Writer.WriteLine($"Expected sequence was non-empty, actual sequence was empty.");
+                writer.WriteLine($"Expected sequence was non-empty, actual sequence was empty.");
               }
               else
               {
-                _context.Writer.WriteLine($"After {index} elements, actual sequence stopped");
+                writer.WriteLine($"After {index} elements, actual sequence stopped");
               }
             }
           }
@@ -126,7 +169,26 @@ namespace VerifiedAssertions
       return true;
     }
 
-    private void WriteAssertionFailedForIndex(int index, IEnumerator<T> enumerableExpected, IEnumerator<T> valueActual, CollectionCount collectionCount)
+    private string GetStringRepresentationOfBeginning(IEnumerable<T> sequenceExpected)
+    {
+      var firstElements = sequenceExpected.Take(4).ToArray();
+      var textRepresentation = string.Join(", ", firstElements.Take(3).Select(it => _context.Wrap(it)));
+      var hasMoreThanThree = firstElements.Length > 3;
+      if (hasMoreThanThree)
+      {
+        textRepresentation = $"[{textRepresentation}, ...]";
+      }
+      else
+      {
+        textRepresentation = $"[{textRepresentation}]";
+      }
+
+      return textRepresentation;
+    }
+
+    private void WriteAssertionFailedForIndex(
+      int index, IEnumerator<T> enumerableExpected, IEnumerator<T> valueActual, CollectionCount collectionCount
+    )
     {
       var writer = _context.Writer;
 
@@ -151,7 +213,9 @@ namespace VerifiedAssertions
       {
         if (collectionCount.CountExpected != collectionCount.CountActual)
         {
-          writer.WriteNoteLine($"Expected length is {collectionCount.CountExpected}, actual length is {collectionCount.CountActual}");
+          writer.WriteNoteLine(
+            $"Expected length is {collectionCount.CountExpected}, actual length is {collectionCount.CountActual}"
+          );
         }
         else
         {
@@ -164,7 +228,7 @@ namespace VerifiedAssertions
     {
       if (index > 1)
       {
-        _context.Writer.WriteNoteLine($"Elements at indices 0 - {index-1} were equal");
+        _context.Writer.WriteNoteLine($"Elements at indices 0 - {index - 1} were equal");
       }
       else if (index > 0)
       {

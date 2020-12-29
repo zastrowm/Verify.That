@@ -15,14 +15,14 @@ namespace VerifiedAssertions
       => Value = value;
 
     public T Value { get; }
-    
+
     public IVerificationTarget<T> AddAssertion(VerificationAssertion<T> assertion)
     {
       var context = new Context();
       bool didPass = assertion.Apply(this, context);
       if (!didPass)
         throw new InvalidOperationException($"Assertion failure: {Environment.NewLine}{context.GetOutput()}");
-      
+
       return this;
     }
 
