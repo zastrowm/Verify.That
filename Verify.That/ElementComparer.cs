@@ -43,6 +43,7 @@ namespace VerifiedAssertions
     private readonly Context _context;
     private readonly IEqualityComparer<T> _comparer;
     private readonly bool _isUsingDefaultComparer;
+    private LinkedList<T> _lastNElements = new();
 
     public ElementComparer(Context context, IEqualityComparer<T>? comparer)
     {
@@ -162,6 +163,13 @@ namespace VerifiedAssertions
             return false;
           }
 
+          // keep track of up to 3 elements so that we can print them out on failure
+          _lastNElements.AddLast(enumeratorActual.Current);
+          if (_lastNElements.Count > 3)
+          {
+            _lastNElements.RemoveFirst();
+          }
+
           index++;
         } while (true);
       }
@@ -228,11 +236,21 @@ namespace VerifiedAssertions
     {
       if (index > 1)
       {
-        _context.Writer.WriteNoteLine($"Elements at indices 0 - {index - 1} were equal");
+        _context.Writer.WriteNoteLine($"Elements at indices 0-{index - 1} were equal");
       }
       else if (index > 0)
       {
         _context.Writer.WriteNoteLine($"Element at index 0 was equal");
+      }
+
+      int i = index - _lastNElements.Count;
+      var current = _lastNElements.First;
+
+      while (current != null)
+      {
+        _context.Writer.WriteNoteNext($"[{i}]: {_context.Wrap(current.Value)}");
+        i++;
+        current = current.Next;
       }
     }
 

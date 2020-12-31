@@ -36,6 +36,15 @@ namespace VerifiedAssertions
       _writer.WriteLine(str.ToString());
     }
 
+    public void WriteNoteNext(FormattableString str)
+    {
+      if (str == null)
+        throw new ArgumentNullException(nameof(str));
+
+      _writer.Write("      ┕ ");
+      _writer.WriteLine(str.ToString());
+    }
+
     public void WriteLine(FormattableString str)
     {
       if (str == null)

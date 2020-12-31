@@ -23,10 +23,15 @@ namespace VerifiedAssertions
 
     public Writer Writer { get; }
 
-    public T Wrap<T>(T value)
+    public string Wrap<T>(T value)
     {
+      if (value is string str)
+      {
+        return StringLiteralConverter.ToLiteral(str);
+      }
+
       // TODO
-      return value;
+      return value?.ToString() ?? "<null>";
     }
 
     public void WriteMessage(FormattableString? message)
