@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace VerifiedAssertions
 {
@@ -21,7 +22,7 @@ namespace VerifiedAssertions
       var context = new Context();
       bool didPass = assertion.Apply(this, context);
       if (!didPass)
-        throw new InvalidOperationException($"Assertion failure: {Environment.NewLine}{context.GetOutput()}");
+        throw CreateException($"Assertion failure: {Environment.NewLine}{context.GetOutput()}");
 
       return this;
     }
@@ -32,5 +33,30 @@ namespace VerifiedAssertions
     /// <inheritdoc />
     public override string ToString()
       => Value?.ToString() ?? "<null>";
+
+    private static Exception CreateException(string message)
+    {
+      if (XUnitException.Value is Type type)
+      {
+        return (Exception)Activator.CreateInstance(type, message)!;
+      }
+
+      return new InvalidOperationException(message);
+    }
+
+    private static Lazy<Type?> XUnitException = new(
+      () =>
+      {
+        try
+        {
+          var assembly = Assembly.Load(new AssemblyName("xunit.assert"));
+          return assembly.GetType("Xunit.Sdk.XunitException");
+        }
+        catch
+        {
+          return null;
+        }
+      }
+    );
   }
 }
