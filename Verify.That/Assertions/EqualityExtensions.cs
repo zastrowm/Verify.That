@@ -61,7 +61,7 @@ namespace VerifiedAssertions
 
           if (!isUsingDefaultComparer)
           {
-            writer.WriteLine($"(using custom comparer)");
+            writer.WriteLine($"(using custom comparer: {comparer})");
           }
 
           return false;
