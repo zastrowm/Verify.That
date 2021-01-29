@@ -15,4 +15,10 @@ namespace VerifiedAssertions
     public static ValueVerificationTarget<int> Expect(byte value)
       => new ValueVerificationTarget<int>(value);
   }
+
+  public static class I
+  {
+    public static ValueVerificationTarget<T> Expect<T>(T value)
+      => new ValueVerificationTarget<T>(value);
+  }
 }
