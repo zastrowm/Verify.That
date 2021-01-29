@@ -13,7 +13,8 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> ToEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
-      FormattableString? message = null)
+      FormattableString? message = null
+    )
       => ToEqual(target, comparisonValue, null!, message);
 
     /// <summary>
@@ -23,27 +24,23 @@ namespace VerifiedAssertions
       this IVerificationTarget<T> target,
       T comparisonValue,
       IEqualityComparer<T> comparer,
-      FormattableString? message = null)
+      FormattableString? message = null
+    )
     {
       return CallbackAssertion.Create(
         target,
         context =>
         {
-          bool isUsingDefaultComparer = false;
+          var isUsingDefaultComparer = false;
 
           if (comparer == null)
           {
-            var result = TryUseCollectionComparer(context, target.Value, comparisonValue);
-            if (result != null)
-            {
-              return result.Value;
-            }
-
+            // TODO inverted collection comparer
             isUsingDefaultComparer = true;
             comparer = EqualityComparer<T>.Default;
           }
 
-          bool didPass = comparer.Equals(target.Value, comparisonValue);
+          var didPass = comparer.Equals(target.Value, comparisonValue);
           if (didPass)
           {
             return true;
@@ -65,7 +62,8 @@ namespace VerifiedAssertions
           }
 
           return false;
-        });
+        }
+      );
     }
 
     /// <summary>
@@ -102,12 +100,78 @@ namespace VerifiedAssertions
     }
 
     /// <summary>
+    ///   Verifies that the given value is not equal to the given value.
+    /// </summary>
+    public static IVerificationTarget<T> ToNotEqual<T>(
+      this IVerificationTarget<T> target,
+      T comparisonValue,
+      FormattableString? message = null
+    )
+      => ToNotEqual(target, comparisonValue, null!, message);
+
+    /// <summary>
+    ///   Verifies that the given value is not equal to the given value.
+    /// </summary>
+    public static IVerificationTarget<T> ToNotEqual<T>(
+      this IVerificationTarget<T> target,
+      T comparisonValue,
+      IEqualityComparer<T> comparer,
+      FormattableString? message = null
+    )
+    {
+      return CallbackAssertion.Create(
+        target,
+        context =>
+        {
+          var isUsingDefaultComparer = false;
+
+          if (comparer == null)
+          {
+            var result = TryUseCollectionComparer(context, target.Value, comparisonValue);
+            if (result != null)
+            {
+              return result.Value;
+            }
+
+            isUsingDefaultComparer = true;
+            comparer = EqualityComparer<T>.Default;
+          }
+
+          var didEqual = comparer.Equals(target.Value, comparisonValue);
+          if (!didEqual)
+          {
+            return true;
+          }
+
+          var writer = context.Writer;
+
+          context.WriteMessage(message);
+
+          using (writer.Indent())
+          {
+            writer.WriteLine($"Expected values not to be equal");
+            writer.WriteLine($"Expected: != {context.Wrap(comparisonValue)}");
+            writer.WriteLine($"And was:     {target}");
+          }
+
+          if (!isUsingDefaultComparer)
+          {
+            writer.WriteLine($"(using custom comparer: {comparer})");
+          }
+
+          return false;
+        }
+      );
+    }
+
+    /// <summary>
     ///   Verifies that the given value is equal to the given value.
     /// </summary>
     public static IVerificationTarget<T> ToReferenceEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
-      FormattableString? message = null)
+      FormattableString? message = null
+    )
       where T : class
     {
       return CallbackAssertion.Create(
@@ -130,7 +194,8 @@ namespace VerifiedAssertions
           context.Writer.WriteLine($"(using reference comparer)");
 
           return false;
-        });
+        }
+      );
     }
 
     /// <summary>
@@ -139,7 +204,8 @@ namespace VerifiedAssertions
     public static IVerificationTarget<T> ToNotReferenceEqual<T>(
       this IVerificationTarget<T> target,
       T comparisonValue,
-      FormattableString? message = null)
+      FormattableString? message = null
+    )
       where T : class
     {
       return CallbackAssertion.Create(
@@ -162,7 +228,8 @@ namespace VerifiedAssertions
           context.Writer.WriteLine($"(using reference comparer)");
 
           return false;
-        });
+        }
+      );
     }
   }
 }
