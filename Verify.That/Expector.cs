@@ -15,5 +15,9 @@ namespace VerifiedAssertions
   {
     public static ValueVerificationTarget<T> Expect<T>(T value)
       => new ValueVerificationTarget<T>(value);
+
+    public static unsafe ValueVerificationTarget<IntPtr> ExpectPointer<T>(T* value)
+      where T : unmanaged
+      => new ValueVerificationTarget<IntPtr>((IntPtr)value);
   }
 }
