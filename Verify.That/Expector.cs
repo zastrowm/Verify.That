@@ -5,17 +5,12 @@ using System.Linq;
 namespace VerifiedAssertions
 {
   /// <summary>
-  ///   Static class to contain standalone "Expect" method.
+  /// Introduction point for verifications.  Uses the form:
+  /// <code>
+  /// I.Expect(value)
+  ///  .ToEqual(somethingElse)
+  /// </code>
   /// </summary>
-  public static class Expector
-  {
-    public static ValueVerificationTarget<T> Expect<T>(T value)
-      => new ValueVerificationTarget<T>(value);
-
-    public static ValueVerificationTarget<int> Expect(byte value)
-      => new ValueVerificationTarget<int>(value);
-  }
-
   public static class I
   {
     public static ValueVerificationTarget<T> Expect<T>(T value)

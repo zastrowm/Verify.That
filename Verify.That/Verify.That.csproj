@@ -11,4 +11,19 @@
     <AssemblyOriginatorKeyFile>../StrongNameKey.snk</AssemblyOriginatorKeyFile>
     <RootNamespace>VerifiedAssertions</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Assertions\EqualityExtensions.Numeric.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EqualityExtensions.Numeric.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Assertions\EqualityExtensions.Numeric.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EqualityExtensions.Numeric.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace VerifiedAssertions
 {
-  public static class EqualityExtensions
+  public static partial class EqualityExtensions
   {
     /// <summary>
     ///   Verifies that the given value is equal to the given value.

@@ -1,0 +1,56 @@
+<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+<#
+  var converters = new Dictionary<string, string[]>()
+                   {
+                     { "byte", new[] { "int", "uint", "long", "ulong", } },
+                     { "short", new[] { "int", "uint", "long", "ulong", } },
+                   };
+#>
+
+namespace VerifiedAssertions
+{
+  public static partial class EqualityExtensions
+  {
+<#
+  foreach (var kvp in converters)
+    foreach (var fromType in kvp.Value)
+    {
+      var toType = kvp.Key;
+#>
+    /// <summary>
+    ///   Verifies that the given value is equal to the given value.
+    /// </summary>
+    public static IVerificationTarget<<#= toType #>> ToEqual(
+      this IVerificationTarget<<#= toType #>> target,
+      <#= fromType #> comparisonValue,
+      FormattableString? message = null
+    )
+    {
+      checked { return ToEqual<<#= toType #>>(target, (<#= toType #>)comparisonValue, null!, message); }
+    }
+
+   /// <summary>
+   ///   Verifies that the given value is equal to the given value.
+   /// </summary>
+   public static IVerificationTarget<<#= toType #>> ToEqual(
+      this IVerificationTarget<<#= toType #>> target,
+      <#= fromType #> comparisonValue,
+      IEqualityComparer<<#= toType #>> comparer,
+      FormattableString? message = null
+    )
+    {
+      checked { return ToEqual<<#= toType #>>(target, (<#= toType #>)comparisonValue, comparer, message); }
+    }
+<#
+    }
+#>
+  }
+}
