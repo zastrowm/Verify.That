@@ -1,56 +1,100 @@
 <#@ template language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System" #>
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-<#
-  var converters = new Dictionary<string, string[]>()
-                   {
-                     { "byte", new[] { "int", "uint", "long", "ulong", } },
-                     { "short", new[] { "int", "uint", "long", "ulong", } },
-                   };
-#>
-
 namespace VerifiedAssertions
 {
-  public static partial class EqualityExtensions
-  {
+
 <#
+  var converters
+    = new Dictionary<string, string[]>()
+      {
+        { "byte", new[] { "int", "uint", "long", "ulong", } },
+        { "short", new[] { "int", "uint", "long", "ulong", } },
+        { "ushort", new[] { "int", "short", "long", "ulong", } },
+        { "uint", new[] { "int", "long", "ulong", } },
+      };
+
+  var operators
+    = new[]
+      {
+        new
+        {
+          operation = "ToEqual",
+          comment = "Verifies that the given value is equal to the given value.",
+          comparer = "IEqualityComparer",
+          clazz = "EqualityExtensions",
+        },
+        new
+        {
+          operation = "ToNotEqual",
+          comment = "Verifies that the given value is not equal to the given value.",
+          comparer = "IEqualityComparer",
+          clazz = "EqualityExtensions",
+        },
+        new
+        {
+          operation = "ToBeGreaterThan",
+          comment = "Verifies that the given value is greater than the comparison value.",
+          comparer = "IComparer",
+          clazz = "ComparableExtensions",
+        },
+        new
+        {
+          operation = "ToBeGreaterThanOrEqualTo",
+          comment = "Verifies that the given value is greater than or equal to the comparison value.",
+          comparer = "IComparer",
+          clazz = "ComparableExtensions",
+        },
+        new
+        {
+          operation = "ToBeLessThan",
+          comment = "Verifies that the given value is less than the comparison value.",
+          comparer = "IComparer",
+          clazz = "ComparableExtensions",
+        },
+        new
+        {
+          operation = "ToBeLessThanOrEqualTo",
+          comment = "Verifies that the given value is less or equal to than the comparison value.",
+          comparer = "IComparer",
+          clazz = "ComparableExtensions",
+        },
+      };
+
   foreach (var kvp in converters)
     foreach (var fromType in kvp.Value)
-    {
-      var toType = kvp.Key;
+      foreach (var operationKvp in operators)
+      {
+        var toType = kvp.Key;
+        var operation = operationKvp.operation;
+        var text = operationKvp.comment;
+        var comparer = operationKvp.comparer;
+        var clazz = operationKvp.clazz;
 #>
-    /// <summary>
-    ///   Verifies that the given value is equal to the given value.
-    /// </summary>
-    public static IVerificationTarget<<#= toType #>> ToEqual(
+  public static partial class <#= clazz #>
+  {
+    /// <summary> <#= text #> </summary>
+    public static IVerificationTarget<<#= toType #>> <#= operation #>(
       this IVerificationTarget<<#= toType #>> target,
       <#= fromType #> comparisonValue,
       FormattableString? message = null
     )
-    {
-      checked { return ToEqual<<#= toType #>>(target, (<#= toType #>)comparisonValue, null!, message); }
-    }
+      => <#= operation #>(target, checked((<#= toType #>)comparisonValue), null!, message);
 
-   /// <summary>
-   ///   Verifies that the given value is equal to the given value.
-   /// </summary>
-   public static IVerificationTarget<<#= toType #>> ToEqual(
+    /// <summary> <#= text #> </summary>
+    public static IVerificationTarget<<#= toType #>> <#= operation #>(
       this IVerificationTarget<<#= toType #>> target,
       <#= fromType #> comparisonValue,
-      IEqualityComparer<<#= toType #>> comparer,
+      <#= comparer #><<#= toType #>> comparer,
       FormattableString? message = null
     )
-    {
-      checked { return ToEqual<<#= toType #>>(target, (<#= toType #>)comparisonValue, comparer, message); }
-    }
-<#
-    }
-#>
+      => <#= operation #>(target, checked((<#= toType #>)comparisonValue), comparer, message);
   }
+<#
+      }
+#>
 }

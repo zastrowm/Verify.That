@@ -7,7 +7,7 @@ namespace VerifiedAssertions
   /// <summary>
   ///   Verifications that target <see cref="IVerificationTarget{T}"/>.
   /// </summary>
-  public static class ComparableExtensions
+  public static partial class ComparableExtensions
   {
     /// <summary>
     ///   Verifies that the given value is greater than the comparison value.
