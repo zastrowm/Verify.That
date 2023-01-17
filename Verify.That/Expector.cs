@@ -13,6 +13,9 @@ namespace VerifiedAssertions
   /// </summary>
   public static class I
   {
+    /// <summary>
+    ///   Start a chain of assertions about the given value.
+    /// </summary>
     public static ValueVerificationTarget<T> Expect<T>(T value)
       => new ValueVerificationTarget<T>(value);
 

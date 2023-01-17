@@ -140,7 +140,7 @@ namespace VerifiedAssertions
     }
 
     /// <summary>
-    ///   Helper class so that the return value of <see cref="Writer.Indent"/>, when disposed, will dedent.
+    ///   Helper class so that the return value of <see cref="Indent"/>, when disposed, will dedent.
     /// </summary>
     private class DedentOnDisposable : IDisposable
     {
